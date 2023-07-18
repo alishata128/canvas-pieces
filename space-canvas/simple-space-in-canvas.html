@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>simple-space-in-canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: 0;
+        }
+
+        canvas {
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            background: #001;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas")
+        const ctx = canvas.getContext("2d")
+
+        let screen = {
+        }
+        let starsArr = []
+
+        const stars = {
+            speed: 5 + Math.random(),
+            number: 100,
+            extinction: 100,
+        }
+
+        screen = {
+            w: innerWidth,
+            h: innerHeight,
+            center: [innerWidth / 2, innerHeight / 2]
+        }
+
+        canvas.width = screen.w
+        canvas.height = screen.h
+
+        const mouse = {
+            x: undefined, y: undefined
+        }
+
+        window.onmousemove = function (e) {
+            mouse.x = e.x
+            mouse.y = e.y
+        }
+
+
+        function Shape() {
+            this.x = Math.random() * canvas.width
+            this.y = Math.random() * canvas.height
+            this.z = Math.random() * canvas.width
+            this.speed = Math.random() * 20;
+
+            this.draw = function () {
+                let x, y, rad, opacity;
+                x = (this.x - (innerWidth / 2)) * (canvas.width / this.z) + screen.center[0]
+                y = (this.y - (innerHeight / 2)) * (canvas.width / this.z) + screen.center[1]
+                rad = canvas.width / this.z
+                opacity = (rad > stars.extinction) ? 1.5 * (2 - rad / stars.extinction) : 1;
+                ctx.beginPath()
+                ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`
+                ctx.arc(x, y, rad, 0, 2 * Math.PI, false)
+                ctx.fill()
+                ctx.closePath()
+            }
+
+            this.move = function () {
+                this.z -= this.speed
+                if (this.z <= 0) {
+                    this.z = canvas.width / 2
+                }
+            }
+        }
+
+
+        function init() {
+            starsArr = []
+            for (let i = 0; i < stars.number; i++) {
+                starsArr.push(
+                    new Shape()
+                )
+            }
+        }
+
+
+        init()
+
+
+        function animate() {
+            ctx.fillStyle = "rgba(0,0,0,0.5)"
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            for (let i = 0; i < starsArr.length; i++) {
+                starsArr[i].draw()
+                starsArr[i].move()
+
+                // if (starsArr[i].z >= canvas.width || starsArr[i].z >= canvas.height || starsArr[i].z < 0) {
+                //     starsArr.splice(i, 1)
+                // }
+
+                console.log(starsArr.length)
+            }
+            window.requestAnimationFrame(animate)
+
+        }
+
+        animate()
+    </script>
+</body>
+
+</html>

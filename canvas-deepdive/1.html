@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas"), c = canvas.getContext("2d");
+        canvas.width = innerWidth, canvas.height = innerHeight
+        function init() {
+
+        }
+        var data = [16, 68, 20, 30, 54];
+        c.fillStyle = "gray"
+        c.fillRect(0, 0, 500, 500)
+        c.fillStyle = "black"
+        c.lineWidth = 2.0
+        c.beginPath()
+        c.moveTo(30, 10)
+        c.lineTo(30, 460)
+        c.lineTo(490, 460)
+        c.stroke()
+        for (let i = 0; i < data.length; i++) {
+            let dp = data[i]
+            c.fillStyle = "blue"
+            c.fillRect(25 + i * 100, 500 - dp * 5 - 45, 50, dp * 5)
+            c.fillStyle = "black"
+            c.font = "25px monospace"
+            c.textAlign = "center"
+            c.textBaseline = "middle"
+            c.fillText(data[i], 50 + i * 100, 480, 50, dp * 5)
+        }
+
+    </script>
+</body>
+
+</html>
