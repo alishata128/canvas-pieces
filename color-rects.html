@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>color-rects</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100vh;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            position: absolute;
+            image-rendering: optimizeQuality;
+        }
+
+        .word {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 9999;
+            font-size: 10vmin;
+            font-family: Poppins, sans-serif;
+            text-align: center;
+            color: rgba(0, 0, 0, 0.6);
+            transition: all .3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="word">Color</div>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas"), c = canvas.getContext("2d")
+        canvas.width = innerWidth, canvas.height = innerHeight
+
+
+        const rectWidth = 10
+        let rows = []
+        let mouse = { x: undefined, y: undefined }
+        let columns = (canvas.width / 2) + rectWidth
+        let rowss = (canvas.height / 2) + rectWidth
+
+
+
+        class ColorRect {
+            constructor(x, y, w, h, c, order) {
+                this.x = x
+                this.y = y
+                this.w = w
+                this.h = h
+                this.c = c
+                this.order = order
+            }
+
+            draw() {
+                c.fillStyle = this.c
+                c.beginPath()
+                c.fillRect(this.x, this.y, this.w, this.h)
+                c.fill()
+                c.closePath()
+            }
+
+            update() {
+                this.draw()
+                whatColor(this.x, this.y, this.w, this.h, this.order)
+            }
+        }
+
+
+        onresize = function () {
+            canvas.width = innerWidth, canvas.height = innerHeight
+            mouse = { x: canvas.width / 2, y: canvas.height / 2 }
+            columns = (canvas.width / 2) + rectWidth
+            rowss = (canvas.height / 2) + rectWidth
+            init()
+        }
+
+
+        function init() {
+            for (let i = 0; i < rowss; i++) {
+                rows[i] = []
+                for (let j = 0; j < columns; j++) {
+                    rows[i][j] = new ColorRect(i * rectWidth, j * rectWidth, rectWidth, rectWidth, `hsl(${i * 2},${80}%,${50}%)`, { i, j })
+                }
+            }
+        }
+
+        onmousemove = function (e) {
+            mouse.x = e.clientX, mouse.y = e.clientX
+        }
+
+        onclick = function (e) {
+            mouse.x = e.clientX, mouse.y = e.clientX
+
+        }
+
+
+        const whatColor = (x, y, w, h, order) => {
+            if (
+                mouse.x - x < w &&
+                mouse.x - x > -w &&
+                mouse.y - y < h &&
+                mouse.y - y > -h
+            ) {
+                // document.documentElement.style.setProperty("--selected-color", rows[order.i][order.j].c)
+                document.querySelector(".word").textContent = rows[order.i][order.j].c
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate)
+            c.fillStyle = "rgba(0,0,0,0.1)"
+            c.fillRect(0, 0, canvas.width, canvas.height)
+            rows.forEach((row, i) => {
+                row.forEach((rect, j) => {
+                    rect.update()
+                })
+            })
+        }
+
+
+        init()
+        animate()
+    </script>
+</body>
+
+</html>

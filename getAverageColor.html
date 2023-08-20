@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>getAverageColor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100vh;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            position: absolute;
+        }
+
+        .top {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.705), transparent);
+            padding: 1rem;
+            height: 20vh;
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top">
+        <input type="file">
+    </div>
+    <canvas></canvas>
+    <script>
+
+        const canvas = document.querySelector("canvas")
+        const c = canvas.getContext("2d")
+        canvas.width = innerWidth, canvas.height = innerHeight
+
+        const readSingleImage = (e) => {
+            const file = e.target.files[0]
+            if (!file) return;
+
+            const r = new FileReader()
+
+            r.onload = (e) => {
+                const data = e.target.result
+                console.log(data)
+                const img = document.createElement("img")
+                img.src = data
+                img.width = innerWidth
+                img.height = innerHeight
+                getAverageColor(img)
+            }
+
+            r.readAsDataURL(file)
+        }
+
+        document.querySelector("input").addEventListener("change", readSingleImage, true)
+
+        const getAverageColor = (image) => {
+            const canvas = document.createElement("canvas")
+            const ctx = canvas.getContext("2d")
+            canvas.width = innerWidth
+            canvas.height = innerHeight
+            const blockSize = 4
+            ctx.drawImage(image, 0, 0, image.width, image.height)
+            const imageData = ctx.getImageData(0, 0, image.width, image.height)
+            const pixels = imageData.data
+            const numberOfPixels = pixels.length / blockSize
+            let r = 0, g = 0, b = 0;
+            for (let i = 0; i < numberOfPixels; i++) {
+                r += pixels[i * blockSize]
+                g += pixels[i * blockSize + 1]
+                b += pixels[i * blockSize + 2]
+            }
+            r = ~~(r / numberOfPixels)
+            g = ~~(g / numberOfPixels)
+            b = ~~(b / numberOfPixels)
+
+            console.log(r, g, b)
+
+            // c.fillStyle = `rgb(${r},${g},${b})`
+            // c.fillRect(0, 0, canvas.width, canvas.height)
+
+        }
+
+    </script>
+</body>
+
+</html>

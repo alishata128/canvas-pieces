@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canvas-blurry-backdrop-filter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100vh;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #222;
+        }
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            max-width: 100%;
+            height: auto;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body>
+    <img id="image"
+        src="https://media.npr.org/assets/img/2022/06/22/gettyimages-1238924365_wide-b1f7435f5e1e69d0b3a32ad364de7204c89cc15e.jpg"
+        alt="">
+    <canvas id="canvas"></canvas>
+    <script>
+        const image = document.getElementById("image")
+        const canvas = document.querySelector("canvas")
+        const c = canvas.getContext("2d")
+        canvas.width = image.width, canvas.height = image.height
+
+        c.drawImage(image, 0, 0, canvas.width, canvas.height)
+        c.filter = 'blur(9px)';
+        c.drawImage(canvas, 0, 0, canvas.width, canvas.height)
+
+        let isDrawing = false
+        function startDrawing() {
+            isDrawing = true
+        }
+        function stopDrawing() {
+            isDrawing = false
+        }
+
+        canvas.onmousemove = e => revealImage(e)
+        canvas.onmousedown = e => startDrawing()
+        canvas.onmouseup = e => stopDrawing()
+
+
+        function revealImage(e) {
+            if (!isDrawing) return
+            // c.clearRect(0, 0, canvas.width, canvas.height)
+            // c.drawImage(image, 0, 0, canvas.width, canvas.height)
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left
+            const mouseY = e.clientY - rect.top
+            const revealSize = 100
+            const revealX = mouseX - revealSize / 2;
+            const revealY = mouseY - revealSize / 2;
+            c.clearRect(revealX, revealY, revealSize, revealSize)
+
+        }
+    </script>
+</body>
+
+</html>

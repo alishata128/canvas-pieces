@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chapter02</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas"), c = canvas.getContext("2d")
+        canvas.width = innerWidth, canvas.height = innerHeight
+
+        c.globalAlpha = 1.0
+
+        // var imageObj = new Image()
+        // imageObj.src = "emoji.png"
+
+        // imageObj.height = "0px"
+        // imageObj.onload = function () {
+        //     imageObj.width = "0px"
+        //     var pat1 = c.createPattern(imageObj, "repeat")
+        //     c.fillStyle = pat1
+        //     c.fillRect(0, 0, canvas.width, canvas.height)
+        // }
+
+        c.fillStyle = "red"
+        c.globalAlpha = 50 / 100
+        c.fillRect(0, 0, 50, 50)
+        c.globalAlpha = 30 / 100
+        c.fillRect(25, 25, 50, 50)
+        c.globalAlpha = 1.0
+
+
+        const data = [10, 20, 40, 30]
+        c.fillStyle = "blue"
+        for (var i = 0; i < data.length; i++) {
+            var dp = data[i]
+            c.translate(100, 0)
+            c.fillRect(0, 0, 50, dp)
+        }
+
+
+        c.fillStyle = "orange"
+        c.translate(50, 50)
+        var rads = 30 * Math.PI * 2.0 / 360.0
+        c.rotate(rads)
+        c.fillRect(300, 300, 100, 100)
+
+    </script>
+</body>
+
+</html>

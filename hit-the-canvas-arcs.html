@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hit-the-canvas-arcs.html</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100vh;
+        }
+
+        canvas {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas"), c = canvas.getContext("2d")
+        canvas.width = innerWidth, canvas.height = innerHeight
+
+        let rows = []
+        const rad1 = 25
+        const rad2 = 35
+
+        const padding = 100
+        const mouse = { x: canvas.width / 2, y: canvas.height / 2 }
+
+        class Circle {
+            constructor(x, y, rad, color, scaled) {
+                this.x = x
+                this.y = y
+                this.rad = rad
+                this.color = color
+                this.scaled = scaled
+            }
+
+            draw() {
+                c.fillStyle = this.color
+                c.beginPath()
+                c.arc(this.x, this.y, this.rad, 0, Math.PI * 2, false)
+                c.fill()
+                c.closePath()
+            }
+
+            update() {
+                this.draw()
+                if (this.scaled) this.rad = rad1 + 5
+                else this.rad = rad1
+            }
+        }
+
+
+        function init() {
+            rows = []
+            for (let i = 0; i < 5; i++) {
+                rows[i] = []
+                for (let j = 0; j < 5; j++) {
+                    rows[i][j] = new Circle(i * 80 + canvas.width / 2 - 160, j * 80 + canvas.height / 2 - 160, rad1, `hsl(${100}, 50%,50%)`, false)
+                }
+            }
+        }
+
+        init()
+
+        function grow(i, j) {
+            if (!rows[i][j].scaled) {
+                rows[i][j].scaled = true
+                rows[i][j].color = "red"
+                setTimeout(() => {
+                    grow(i - 1, j)
+                    grow(i + 1, j)
+                    grow(i, j - 1)
+                    grow(i, j + 1)
+                }, 100)
+
+                setTimeout(() => {
+                    rows[i][j].scaled = false
+                    rows[i][j].color = `hsl(${100}, 50%,50%)`
+                }, 400)
+            }
+        }
+        onmousemove = function (e) {
+            mouse.x = e.x, mouse.y = e.y
+        }
+        onclick = function (e) {
+            rows.forEach((row, i) => {
+                row.forEach((circle, j) => {
+                    if (
+                        e.x - circle.x < circle.rad &&
+                        e.x - circle.x > -circle.rad &&
+                        e.y - circle.y < circle.rad &&
+                        e.y - circle.y > -circle.rad
+                    ) {
+                        grow(i, j)
+                    } else {
+                        document.documentElement.style.cursor = "default"
+                    }
+                })
+            })
+        }
+
+        function animate() {
+            requestAnimationFrame(animate)
+            c.fillStyle = "rgba(10,0,20,0.1)"
+            c.fillRect(0, 0, canvas.width, canvas.height)
+            rows.forEach((row, i) => {
+                row.forEach((circle, j) => {
+                    circle.update()
+                    if (
+                        mouse.x - circle.x < circle.rad &&
+                        mouse.x - circle.x > -circle.rad &&
+                        mouse.y - circle.y < circle.rad &&
+                        mouse.y - circle.y > -circle.rad
+                    ) {
+                        document.documentElement.style.cursor = "pointer"
+                    } else {
+                        // document.documentElement.style.cursor = "default"
+                    }
+
+                })
+            })
+        }
+
+        animate()
+    </script>
+</body>
+
+</html>

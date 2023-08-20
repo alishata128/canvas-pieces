@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>matrix-portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            background: #001;
+        }
+
+        canvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            width: 100%;
+            height: 250%;
+            background: #001;
+            /* image-rendering: pixelated; */
+            z-index: 0;
+        }
+
+
+        .main {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            z-index: 9999;
+        }
+
+        .avatar {
+            position: relative;
+            width: 230px;
+            height: 230px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            padding: 8px;
+        }
+
+        .avatar img {
+            max-width: 100%;
+        }
+
+        .bio {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            color: #fff;
+            font-family: Poppins, sans-serif;
+            font-size: 1.2rem;
+            margin-left: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .join-newsletter {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Poppins, sans-serif;
+            background: #fff;
+            border-radius: 8px;
+        }
+
+
+        .join-newsletter input {
+            width: 0px;
+            height: 35px;
+            background: transparent;
+            font-size: 1.2rem;
+            padding: 0 8px;
+            font-family: Poppins, sans-serif;
+            border: 0;
+        }
+
+        .join-newsletter input:active,
+        .join-newsletter input:focus {
+            border: 0;
+            outline: 0;
+        }
+
+        .join-newsletter label {
+            position: absolute;
+            left: 8px;
+            color: lightslategray;
+            opacity: 0;
+            transition: 0s ease-in;
+            cursor: text;
+            user-select: none;
+        }
+
+        .join-newsletter button {
+            position: absolute;
+            background: skyblue;
+            border-radius: 8px;
+            height: 100%;
+            width: 120px;
+            border: 0;
+            font-family: Poppins, sans-serif;
+            cursor: pointer;
+        }
+
+        .join-newsletter.active input {
+            width: 300px;
+        }
+
+        .join-newsletter.active label {
+            opacity: 1;
+        }
+
+        .join-newsletter.active button {
+            transform: translateX(90px);
+        }
+
+        .join-newsletter.focus label {
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <div class="main">
+        <div class="avatar">
+            <img src="https://img.icons8.com/fluency/200/person-male.png" alt="person-male" />
+        </div>
+        <div class="bio">
+            <span>- Egypt</span>
+            <span>- Gym</span>
+            <span>- Coding a lot</span>
+        </div>
+        <div class="join-newsletter">
+            <input type="text">
+            <label for="">Type your email</label>
+            <button>Join Newsletter</button>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector(".join-newsletter button").onclick = function (e) {
+            this.parentElement.classList.toggle("active")
+        }
+
+        document.querySelector(".join-newsletter input").onfocus = function (e) {
+            this.parentElement.classList.add("focus")
+        }
+        document.querySelector(".join-newsletter label").onclick = function (e) {
+            document.querySelector(".join-newsletter input").focus()
+        }
+
+        document.querySelector(".join-newsletter input").onblur = function (e) {
+            if (this.value.length > 0) {
+
+            } else {
+                this.parentElement.classList.remove("focus")
+            }
+        }
+
+        const canvas = document.querySelector("canvas")
+        const ctx = canvas.getContext("2d")
+
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+
+        const lines = []
+        for (let i = 0; i < 100; i++) {
+            lines.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                speed: .5 + Math.random() * 5
+            });
+        }
+
+        function update() {
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = "#f1f1f1"
+            ctx.font = "50px Poppins"
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i]
+                line.y += line.speed
+                if (line.y > canvas.height) {
+                    line.y = 0
+                    line.x = Math.random() * canvas.width;
+                }
+                ctx.fillText("|", line.x, line.y)
+            }
+
+            setTimeout(update, 10)
+        }
+
+        update()
+
+    </script>
+</body>
+
+</html>

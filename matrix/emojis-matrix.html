@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>emojis-matrix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        canvas {
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas")
+        const ctx = canvas.getContext("2d")
+        canvas.width = innerWidth
+        canvas.height = innerHeight
+        let drops = []
+        const fontSize = 32
+        let columns = Math.floor(canvas.width / fontSize)
+        // const emojis = [
+        //     '💻', '👽', '👾', '🤖', '🔮', '🌌', '🚀', '🛸', '🌟', '✨',
+        //     '🌀', '🌪️', '🌊', '🌬️', '🔥', '🌋', '🌡️', '❄️', '💨', '💧',
+        //     '👁️', '👁️‍🗨️', '🕶️', '🔍', '🔎', '🔬', '🕳️', '🌐', '💫', '🌎',
+        //     '🎧', '🎤', '🎹', '🎸', '🎵', '🎶', '🎼', '🎬', '🎥', '🎦'
+        // ];
+
+        const emojis = [
+            '😀', '😁', '😂', '🤣', '😃', '😄', '😅', '😆', '😉', '😊',
+            '😋', '😎', '😍', '😘', '😜', '😝', '😛', '🤑', '🤗', '🤔',
+            '🤐', '🤨', '😐', '😑', '😶', '😏', '😒', '🙄', '😬', '🤥',
+            '😌', '😔', '😪', '😫', '😴', '😷', '🤒', '🤕', '🤢', '🤮'
+        ];
+
+        window.onresize = function (e) {
+            canvas.width = innerWidth
+            canvas.height = innerHeight
+            columns = Math.floor(canvas.width / fontSize)
+            drops = []
+            init()
+            console.log(columns)
+        }
+
+        function init() {
+            for (let i = 0; i < columns; i++) {
+                drops[i] = 1
+            }
+
+        }
+
+        init()
+
+
+        const draw = () => {
+            requestAnimationFrame(draw)
+            ctx.fillStyle = "rgba(0,0,0,0.05)"
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = "#0f0"
+            ctx.font = fontSize + "px monospace"
+            for (let i = 0; i < drops.length; i++) {
+                const txt = emojis[Math.floor(Math.random() * emojis.length)]
+                ctx.fillText(txt, i * fontSize, drops[i] * fontSize)
+                if (drops[i] * fontSize > canvas.height && Math.random() > .975) {
+                    drops[i] = 0
+                }
+                drops[i]++
+            }
+        }
+        
+		draw()
+
+    </script>
+</body>
+
+</html>

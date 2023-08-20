@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>matrix-1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        canvas {
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            background: #222;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas")
+        const ctx = canvas.getContext("2d")
+        canvas.width = innerWidth
+        canvas.height = innerHeight
+        const katakana = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンガギグゲゴザジズゼゾダヂヅデドバビブベボパピプペポキャキュキョシャシュショチャチュチョニャニュニョヒャヒュヒョミャミュミョリャリュリョギャギュギョジャジュジョヂャヂュヂョビャビュビョピャピュピョ"
+        const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        const nums = "01234567890"
+        const alphabet = katakana + latin + nums
+        const fontSize = 16
+        const rows = canvas.height / fontSize
+        const drops = []
+        for (let i = 0; i < rows; i++) {
+            drops[i] = 0
+        }
+        const draw = () => {
+            ctx.fillStyle = "rgba(0,0,0,0.05)"
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+            ctx.fillStyle = "#0f0"
+            ctx.font = fontSize + "px monospace"
+
+            for (let i = 0; i < drops.length; i++) {
+                const randomNumber = Math.floor(Math.random() * alphabet.length)
+                const txt = alphabet.charAt(randomNumber)
+                ctx.fillText(txt, drops[i] * fontSize, i * fontSize)
+                if (drops[i] * fontSize > canvas.width && Math.random() > 0.975) {
+                    drops[i] = -1
+                }
+                drops[i]++
+            }
+        }
+
+        setInterval(draw, 30)
+    </script>
+</body>

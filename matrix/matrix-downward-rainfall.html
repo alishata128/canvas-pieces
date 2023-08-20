@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>matrix-downward-rainfall</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background: #292929;
+        }
+
+        canvas {
+            position: absolute;
+            inset: 0;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas></canvas>
+    <script>
+        const canvas = document.querySelector("canvas")
+        const ctx = canvas.getContext("2d")
+
+        canvas.width = window.innerWidth
+        canvas.height = window.innerHeight
+
+        const letters = "abcdefghijklmnopqrstuvwxz".split("")
+        const symbols = []
+        for (let i = 0; i < 100; i++) {
+            symbols.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                speed: 1 + Math.random() * 5,
+                letter: letters[Math.floor(Math.random() * letters.length)],
+            })
+        }
+
+
+        function update() {
+            canvas.width = window.innerWidth
+            canvas.height = window.innerHeight
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.font = "25px monospace"
+            ctx.fillStyle = "lightgreen"
+            for (let i = 0; i < symbols.length; i++) {
+                const symbol = symbols[i]
+                symbol.y += symbol.speed
+                if (symbol.y > canvas.height) {
+                    symbol.y = 0
+                    symbol.x = Math.random() * canvas.width
+                }
+                ctx.fillText(symbol.letter, symbol.x, symbol.y)
+            }
+            setTimeout(update, 10)
+        }
+
+        update()
+    </script>
+</body>
+
+</html>
